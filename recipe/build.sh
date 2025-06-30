@@ -2,7 +2,7 @@
 
 set -ex
 
-if [[ "$CI" == "github_actions" ]]; then
+if [[ "${CI:-}" == "github_actions" ]]; then
   export CPU_COUNT=4
 fi
 
@@ -11,8 +11,17 @@ fi
 mkdir -p $PREFIX/include/python
 cp -r $PREFIX/include/google $PREFIX/include/python/
 
-sed -i "s;@@PREFIX@@;$PREFIX;" third_party/pybind11_protobuf/0001-Add-Python-include-path.patch
-sed -i "s;@@PY_VER@@;$PY_VER;" third_party/pybind11_protobuf/0001-Add-Python-include-path.patch
+# in the megabuild, this value might be wrong. re-compute
+export PY_VER=$($PREFIX/bin/python -c "import sys;print('.'.join(str(v) for v in sys.version_info[:2]))")
+echo $PY_VER
+
+patch_file="third_party/pybind11_protobuf/0001-Add-Python-include-path.patch"
+sed -i "s;@@PREFIX@@;$PREFIX;" ${patch_file}
+if [[ -f ${patch_file}.bak ]]; then
+  sed "s;@@PY_VER@@;$PY_VER;" ${patch_file}.bak > ${patch_file}
+else
+  sed -i.bak "s;@@PY_VER@@;$PY_VER;" ${patch_file}
+fi
 
 export PATH="$PWD:$PATH"
 export CC=$(basename $CC)
@@ -67,7 +76,7 @@ export TF_SYSTEM_LIBS="
   snappy
   zlib
   "
-sed -i -e "s/GRPCIO_VERSION/${grpc_cpp}/" tensorflow/tools/pip_package/setup.py
+sed -i -e "s/GRPCIO_VERSION/${libgrpc}/" tensorflow/tools/pip_package/setup.py
 
 # do not build with MKL support
 export TF_NEED_MKL=0

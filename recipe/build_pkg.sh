@@ -2,6 +2,8 @@
 
 set -exuo pipefail
 
+source $RECIPE_DIR/build.sh
+
 # install the whl making sure to use host pip/python if cross-compiling
 ${PYTHON} -m pip install --no-deps $SRC_DIR/tensorflow_pkg/*.whl
 
