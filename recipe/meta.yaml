@@ -390,21 +390,20 @@ outputs:
         - test_tensorflow.py
       requires:
         - pip
-      imports:
-        - tensorflow                 # [build_platform == target_platform]
       commands:
+        - alias run=${CROSSCOMPILING_EMULATOR}
         - pip check                  # [build_platform == target_platform]
         - cat test_tensorflow.py     # [unix]
-        - python test_tensorflow.py  # [build_platform == target_platform]
+        - run python test_tensorflow.py  # [build_platform == target_platform]
         - tf_upgrade_v2 --help       # [build_platform == target_platform]
         # --help exits with exit code 1
         - test -x $PREFIX/bin/saved_model_cli  # [unix]
-        - tflite_convert --help      # [build_platform == target_platform]
-        - toco --help                # [build_platform == target_platform]
-        - python -c 'import tensorflow as tf; assert tf.test.is_built_with_cuda()'      # [cuda_compiler_version != "None" and build_platform == target_platform]
-        - python -c 'import tensorflow as tf; assert not tf.test.is_built_with_cuda()'  # [cuda_compiler_version == "None" and build_platform == target_platform]
+        - run tflite_convert --help      # [build_platform == target_platform]
+        - run toco --help                # [build_platform == target_platform]
+        - run python -c 'import tensorflow as tf; assert tf.test.is_built_with_cuda()'      # [cuda_compiler_version != "None" and build_platform == target_platform]
+        - run python -c 'import tensorflow as tf; assert not tf.test.is_built_with_cuda()'  # [cuda_compiler_version == "None" and build_platform == target_platform]
         # See https://github.com/conda-forge/tensorflow-feedstock/issues/364
-        - python -c "import tensorflow as tf;graph = tf.function(lambda x:x).get_concrete_function(1.).graph;tf.compat.v1.train.export_meta_graph(graph=graph,graph_def=graph.as_graph_def())"  # [build_platform == target_platform]
+        - run python -c "import tensorflow as tf;graph = tf.function(lambda x:x).get_concrete_function(1.).graph;tf.compat.v1.train.export_meta_graph(graph=graph,graph_def=graph.as_graph_def())"  # [build_platform == target_platform]
 
   - name: tensorflow-estimator
     script: build_estimator.sh  # [unix]
@@ -565,8 +564,9 @@ outputs:
       run:
         - tensorflow {{ version }} cpu*_{{ PKG_BUILDNUM }}
     test:
-      imports:
-        - tensorflow                 # [build_platform == target_platform]
+      commands:
+        - alias run=${CROSSCOMPILING_EMULATOR}  # [build_platform == target_platform]
+        - run python -c "import tensorflow"     # [build_platform == target_platform]
 
   - name: tensorflow-gpu
     build:
@@ -576,8 +576,9 @@ outputs:
       run:
         - tensorflow {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}*_{{ PKG_BUILDNUM }}
     test:
-      imports:
-        - tensorflow                 # [build_platform == target_platform]
+      commands:
+        - alias run=${CROSSCOMPILING_EMULATOR}  # [build_platform == target_platform]
+        - run python -c "import tensorflow"     # [build_platform == target_platform]
 
   - name: tensorflow-sse3
     build:
@@ -594,8 +595,9 @@ outputs:
       run:
         - {{ pin_subpackage("tensorflow", exact=True) }}
     test:
-      imports:
-        - tensorflow
+      commands:
+        - alias run=${CROSSCOMPILING_EMULATOR}
+        - run python -c "import tensorflow"
 
   - name: tensorflow-avx2
     build:
@@ -612,8 +614,9 @@ outputs:
       run:
         - {{ pin_subpackage("tensorflow", exact=True) }}
     test:
-      imports:
-        - tensorflow
+      commands:
+        - alias run=${CROSSCOMPILING_EMULATOR}
+        - run python -c "import tensorflow"
 
   - name: tensorflow-avx512
     build:
@@ -630,8 +633,9 @@ outputs:
       run:
         - {{ pin_subpackage("tensorflow", exact=True) }}
     test:
-      imports:
-        - tensorflow
+      commands:
+        - alias run=${CROSSCOMPILING_EMULATOR}
+        - run python -c "import tensorflow"
 
 about:
   home: http://tensorflow.org/
