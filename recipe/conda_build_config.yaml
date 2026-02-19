@@ -1,12 +1,16 @@
-github_actions_labels:          # [linux]
+# aarch has issues with newer GCC
+c_compiler_version:             # [aarch64]
+  - 11                          # [aarch64]
+  - 11                          # [aarch64]
+cxx_compiler_version:           # [aarch64]
+  - 11                          # [aarch64]
+  - 11                          # [aarch64]
+
+github_actions_labels:          # [unix]
 - cirun-openstack-cpu-2xlarge   # [linux]
+- cirun-macos-m4-large          # [osx]
 microarch_level:
 - 1
+# hmaarrfk -- temporary, uncomment during actual build
 - 3   # [linux and x86_64]
 - 4   # [linux and x86_64]
-libabseil:
-- '20240722'
-libgrpc:
-- '1.67'
-libprotobuf:
-- 5.28.3

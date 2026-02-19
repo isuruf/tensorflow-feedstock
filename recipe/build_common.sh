@@ -6,13 +6,16 @@ if [[ "${CI:-}" == "github_actions" ]]; then
   export CPU_COUNT=4
 fi
 
+# hmaarrfk - 2025/07/06
+# Address incompatibility with newer ABSEL
 # Make libprotobuf-python-headers visible for pybind11_protobuf
 # These files will be deleted at the end of the build.
 mkdir -p $PREFIX/include/python
 cp -r $PREFIX/include/google $PREFIX/include/python/
 
-patch_file="third_party/pybind11_protobuf/0001-Add-Python-include-path.patch"
-sed -i "s;@@PREFIX@@;$PREFIX;" ${patch_file}
+cp ${RECIPE_DIR}/pybind11_protobuf/*.patch ${SRC_DIR}/third_party/pybind11_protobuf/.
+
+sed -i.bak "s;@@PREFIX@@;$PREFIX;" third_party/pybind11_protobuf/0002-Add-Python-include-path.patch
 
 export PATH="$PWD:$PATH"
 export CC=$(basename $CC)
@@ -68,6 +71,7 @@ export TF_SYSTEM_LIBS="
   zlib
   "
 sed -i -e "s/GRPCIO_VERSION/${libgrpc}/" tensorflow/tools/pip_package/setup.py
+sed -i -e "s/<6.0.0dev/<7.0.0dev/g" tensorflow/tools/pip_package/setup.py
 
 # do not build with MKL support
 export TF_NEED_MKL=0
@@ -100,6 +104,13 @@ else
 fi
 
 if [[ ${cuda_compiler_version} != "None" ]]; then
+    if [ ${target_platform} == "linux-aarch64" ]; then
+	NVARCH=sbsa
+    elif [ ${target_platform} == "linux-64" ]; then
+	NVARCH=x86_64
+    else
+	NVARCH=${ARCH}
+    fi
     export LDFLAGS="${LDFLAGS} -lcusparse"
     export GCC_HOST_COMPILER_PATH="${GCC}"
     export GCC_HOST_COMPILER_PREFIX="$(dirname ${GCC})"
@@ -113,35 +124,33 @@ if [[ ${cuda_compiler_version} != "None" ]]; then
 
     export LDFLAGS="${LDFLAGS//-Wl,-z,now/-Wl,-z,lazy}"
 
-    if [[ ${cuda_compiler_version} == 11.8 ]]; then
-        export HERMETIC_CUDA_COMPUTE_CAPABILITIES=sm_35,sm_50,sm_60,sm_62,sm_70,sm_72,sm_75,sm_80,sm_86,sm_87,sm_89,sm_90,compute_90
-        export TF_CUDA_PATHS="${PREFIX},${CUDA_HOME}"
-    elif [[ "${cuda_compiler_version}" == 12* ]]; then
-        export HERMETIC_CUDA_COMPUTE_CAPABILITIES=sm_60,sm_70,sm_75,sm_80,sm_86,sm_89,sm_90,compute_90
+    if [[ "${cuda_compiler_version}" == 12* ]]; then
+        export HERMETIC_CUDA_COMPUTE_CAPABILITIES=sm_60,sm_70,sm_75,sm_80,sm_86,sm_89,sm_90,sm_100,sm_120,compute_120
         export CUDNN_INSTALL_PATH=$PREFIX
         export NCCL_INSTALL_PATH=$PREFIX
-        export CUDA_HOME="${BUILD_PREFIX}/targets/x86_64-linux"
-        export TF_CUDA_PATHS="${BUILD_PREFIX}/targets/x86_64-linux,${PREFIX}/targets/x86_64-linux"
+        export CUDA_HOME="${BUILD_PREFIX}/targets/${NVARCH}-linux"
+        export TF_CUDA_PATHS="${BUILD_PREFIX}/targets/${NVARCH}-linux,${PREFIX}/targets/${NVARCH}-linux"
         # XLA can only cope with a single cuda header include directory, merge both
-        rsync -a ${PREFIX}/targets/x86_64-linux/include/ ${BUILD_PREFIX}/targets/x86_64-linux/include/
+        rsync -a ${PREFIX}/targets/${NVARCH}-linux/include/ ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/
 
         # Although XLA supports a non-hermetic build, it still tries to find headers in the hermetic locations.
         # We do this in the BUILD_PREFIX to not have any impact on the resulting jaxlib package.
         # Otherwise, these copied files would be included in the package.
-        rm -rf ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party
-        mkdir -p ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party/gpus/cuda/extras/CUPTI
-        cp -r ${PREFIX}/targets/x86_64-linux/include ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party/gpus/cuda/
-        cp -r ${PREFIX}/targets/x86_64-linux/include ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party/gpus/cuda/extras/CUPTI/
-        mkdir -p ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party/gpus/cudnn
-        cp ${PREFIX}/include/cudnn*.h ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party/gpus/cudnn/
-        mkdir -p ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party/nccl
-        cp ${PREFIX}/include/nccl.h ${BUILD_PREFIX}/targets/x86_64-linux/include/third_party/nccl/
-        rsync -a ${PREFIX}/targets/x86_64-linux/lib/ ${BUILD_PREFIX}/targets/x86_64-linux/lib/
-        ln -sf ${BUILD_PREFIX}/bin/fatbinary ${BUILD_PREFIX}/targets/x86_64-linux/bin/fatbinary
-        ln -sf ${BUILD_PREFIX}/bin/nvlink ${BUILD_PREFIX}/targets/x86_64-linux/bin/nvlink
-        ln -sf ${BUILD_PREFIX}/bin/ptxas ${BUILD_PREFIX}/targets/x86_64-linux/bin/ptxas
+        rm -rf ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party
+        mkdir -p ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party/gpus/cuda/extras/CUPTI
+        cp -r ${PREFIX}/targets/${NVARCH}-linux/include ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party/gpus/cuda/
+        cp -r ${PREFIX}/targets/${NVARCH}-linux/include ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party/gpus/cuda/extras/CUPTI/
+        mkdir -p ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party/gpus/cudnn
+        cp ${PREFIX}/include/cudnn*.h ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party/gpus/cudnn/
+        mkdir -p ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party/nccl
+        cp ${PREFIX}/include/nccl.h ${BUILD_PREFIX}/targets/${NVARCH}-linux/include/third_party/nccl/
+        rsync -a ${PREFIX}/targets/${NVARCH}-linux/lib/ ${BUILD_PREFIX}/targets/${NVARCH}-linux/lib/
+        mkdir -p ${BUILD_PREFIX}/targets/${NVARCH}-linux/bin
+        ln -sf ${BUILD_PREFIX}/bin/fatbinary ${BUILD_PREFIX}/targets/${NVARCH}-linux/bin/fatbinary
+        ln -sf ${BUILD_PREFIX}/bin/nvlink ${BUILD_PREFIX}/targets/${NVARCH}-linux/bin/nvlink
+        ln -sf ${BUILD_PREFIX}/bin/ptxas ${BUILD_PREFIX}/targets/${NVARCH}-linux/bin/ptxas
 
-        export LOCAL_CUDA_PATH="${BUILD_PREFIX}/targets/x86_64-linux"
+        export LOCAL_CUDA_PATH="${BUILD_PREFIX}/targets/${NVARCH}-linux"
         export LOCAL_CUDNN_PATH="${PREFIX}"
         export LOCAL_NCCL_PATH="${PREFIX}"
 
@@ -163,13 +172,17 @@ else
     export TF_NEED_CUDA=0
 fi
 
-source ${RECIPE_DIR}/gen-bazel-toolchain.sh
+gen-bazel-toolchain
 
 if [[ "${target_platform}" == "osx-64" ]]; then
   # Tensorflow doesn't cope yet with an explicit architecture (darwin_x86_64) on osx-64 yet.
   TARGET_CPU=darwin
   # See https://conda-forge.org/docs/maintainer/knowledge_base.html#newer-c-features-with-old-sdk
   export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
+elif [[ "${target_platform}" == "linux-aarch64" ]]; then
+  TARGET_CPU=aarch64
+elif [[ "${target_platform}" == "linux-x86_64" ]]; then
+  TARGET_CPU=x86_64
 fi
 
 # Get rid of unwanted defaults
@@ -222,7 +235,7 @@ if [[ "${build_platform}" == linux-* ]]; then
 fi
 
 cat >> .bazelrc <<EOF
-build --crosstool_top=//custom_toolchain:toolchain
+build --crosstool_top=//bazel_toolchain:toolchain
 build --@local_config_cuda//cuda:override_include_cuda_libs=true
 build --logging=6
 build --verbose_failures
