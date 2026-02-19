@@ -395,7 +395,7 @@ outputs:
         - pip check                  # [build_platform == target_platform]
         - cat test_tensorflow.py     # [unix]
         - run python test_tensorflow.py  # [build_platform == target_platform]
-        - tf_upgrade_v2 --help       # [build_platform == target_platform]
+        - run tf_upgrade_v2 --help       # [build_platform == target_platform]
         # --help exits with exit code 1
         - test -x $PREFIX/bin/saved_model_cli  # [unix]
         - run tflite_convert --help      # [build_platform == target_platform]
