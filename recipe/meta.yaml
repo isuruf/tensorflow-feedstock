@@ -391,7 +391,7 @@ outputs:
       requires:
         - pip
       commands:
-        - alias run=${CROSSCOMPILING_EMULATOR}
+        - function run() { ${CROSSCOMPILING_EMULATOR} $@; }
         - pip check                  # [build_platform == target_platform]
         - cat test_tensorflow.py     # [unix]
         - run python test_tensorflow.py  # [build_platform == target_platform]
@@ -411,7 +411,7 @@ outputs:
     build:
       # tensorflow 2.18 doesn't support py313 until 2.20, see
       # https://github.com/tensorflow/tensorflow/issues/78774
-      skip: true  # [py==313]
+      skip: true  # [py==313 or microarch_level != 1]
       string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
       string: cpu_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
     requirements:
@@ -565,7 +565,7 @@ outputs:
         - tensorflow {{ version }} cpu*_{{ PKG_BUILDNUM }}
     test:
       commands:
-        - alias run=${CROSSCOMPILING_EMULATOR}  # [build_platform == target_platform]
+        - function run() { ${CROSSCOMPILING_EMULATOR} $@; }  # [build_platform == target_platform]
         - run python -c "import tensorflow"     # [build_platform == target_platform]
 
   - name: tensorflow-gpu
@@ -577,7 +577,7 @@ outputs:
         - tensorflow {{ version }} cuda{{ cuda_compiler_version | replace('.', '') }}*_{{ PKG_BUILDNUM }}
     test:
       commands:
-        - alias run=${CROSSCOMPILING_EMULATOR}  # [build_platform == target_platform]
+        - function run() { ${CROSSCOMPILING_EMULATOR} $@; }  # [build_platform == target_platform]
         - run python -c "import tensorflow"     # [build_platform == target_platform]
 
   - name: tensorflow-sse3
@@ -596,7 +596,7 @@ outputs:
         - {{ pin_subpackage("tensorflow", exact=True) }}
     test:
       commands:
-        - alias run=${CROSSCOMPILING_EMULATOR}
+        - function run() { ${CROSSCOMPILING_EMULATOR} $@; }
         - run python -c "import tensorflow"
 
   - name: tensorflow-avx2
@@ -615,7 +615,7 @@ outputs:
         - {{ pin_subpackage("tensorflow", exact=True) }}
     test:
       commands:
-        - alias run=${CROSSCOMPILING_EMULATOR}
+        - function run() { ${CROSSCOMPILING_EMULATOR} $@; }
         - run python -c "import tensorflow"
 
   - name: tensorflow-avx512
@@ -634,7 +634,7 @@ outputs:
         - {{ pin_subpackage("tensorflow", exact=True) }}
     test:
       commands:
-        - alias run=${CROSSCOMPILING_EMULATOR}
+        - function run() { ${CROSSCOMPILING_EMULATOR} $@; }
         - run python -c "import tensorflow"
 
 about:
