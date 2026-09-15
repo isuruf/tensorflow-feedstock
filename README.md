@@ -1,5 +1,5 @@
-About tensorflow-feedstock
-==========================
+About libtensorflow-feedstock
+=============================
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tensorflow-feedstock/blob/main/LICENSE.txt)
 
@@ -18,12 +18,18 @@ right one for your needs. Build and train models by using the high-level
 Keras API, which makes getting started with TensorFlow and machine learning
 easy.
 
-
 Current build status
 ====================
 
 
-<table>
+<table><tr>
+    <td>GitHub Actions</td>
+    <td>
+      <a href="https://github.com/conda-forge/tensorflow-feedstock/actions/workflows/conda-build.yml">
+        <img src="https://github.com/conda-forge/tensorflow-feedstock/actions/workflows/conda-build.yml/badge.svg?event=push&branch=main">
+      </a>
+    </td>
+  </tr>
 </table>
 
 Current release info
@@ -36,33 +42,31 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libtensorflow__framework-green.svg)](https://anaconda.org/conda-forge/libtensorflow_framework) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libtensorflow_framework.svg)](https://anaconda.org/conda-forge/libtensorflow_framework) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libtensorflow_framework.svg)](https://anaconda.org/conda-forge/libtensorflow_framework) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libtensorflow_framework.svg)](https://anaconda.org/conda-forge/libtensorflow_framework) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow-green.svg)](https://anaconda.org/conda-forge/tensorflow) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow.svg)](https://anaconda.org/conda-forge/tensorflow) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow.svg)](https://anaconda.org/conda-forge/tensorflow) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow.svg)](https://anaconda.org/conda-forge/tensorflow) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow--avx2-green.svg)](https://anaconda.org/conda-forge/tensorflow-avx2) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow-avx2.svg)](https://anaconda.org/conda-forge/tensorflow-avx2) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow-avx2.svg)](https://anaconda.org/conda-forge/tensorflow-avx2) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow-avx2.svg)](https://anaconda.org/conda-forge/tensorflow-avx2) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow--avx512-green.svg)](https://anaconda.org/conda-forge/tensorflow-avx512) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow-avx512.svg)](https://anaconda.org/conda-forge/tensorflow-avx512) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow-avx512.svg)](https://anaconda.org/conda-forge/tensorflow-avx512) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow-avx512.svg)](https://anaconda.org/conda-forge/tensorflow-avx512) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow--base-green.svg)](https://anaconda.org/conda-forge/tensorflow-base) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow-base.svg)](https://anaconda.org/conda-forge/tensorflow-base) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow-base.svg)](https://anaconda.org/conda-forge/tensorflow-base) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow-base.svg)](https://anaconda.org/conda-forge/tensorflow-base) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow--cpu-green.svg)](https://anaconda.org/conda-forge/tensorflow-cpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow-cpu.svg)](https://anaconda.org/conda-forge/tensorflow-cpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow-cpu.svg)](https://anaconda.org/conda-forge/tensorflow-cpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow-cpu.svg)](https://anaconda.org/conda-forge/tensorflow-cpu) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow--estimator-green.svg)](https://anaconda.org/conda-forge/tensorflow-estimator) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow-estimator.svg)](https://anaconda.org/conda-forge/tensorflow-estimator) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow-estimator.svg)](https://anaconda.org/conda-forge/tensorflow-estimator) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow-estimator.svg)](https://anaconda.org/conda-forge/tensorflow-estimator) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow--gpu-green.svg)](https://anaconda.org/conda-forge/tensorflow-gpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow-gpu.svg)](https://anaconda.org/conda-forge/tensorflow-gpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow-gpu.svg)](https://anaconda.org/conda-forge/tensorflow-gpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow-gpu.svg)](https://anaconda.org/conda-forge/tensorflow-gpu) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tensorflow--sse3-green.svg)](https://anaconda.org/conda-forge/tensorflow-sse3) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tensorflow-sse3.svg)](https://anaconda.org/conda-forge/tensorflow-sse3) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tensorflow-sse3.svg)](https://anaconda.org/conda-forge/tensorflow-sse3) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tensorflow-sse3.svg)](https://anaconda.org/conda-forge/tensorflow-sse3) |
 
-Installing tensorflow
-=====================
+Installing libtensorflow
+========================
 
-Installing `tensorflow` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing `libtensorflow` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
 ```
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `libtensorflow, libtensorflow_cc, libtensorflow_framework, tensorflow, tensorflow-avx2, tensorflow-avx512, tensorflow-base, tensorflow-cpu, tensorflow-estimator, tensorflow-gpu, tensorflow-sse3` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `libtensorflow, libtensorflow_cc, libtensorflow_framework, tensorflow, tensorflow-avx2, tensorflow-base, tensorflow-cpu, tensorflow-gpu, tensorflow-sse3` can be installed with `conda`:
 
 ```
-conda install libtensorflow libtensorflow_cc libtensorflow_framework tensorflow tensorflow-avx2 tensorflow-avx512 tensorflow-base tensorflow-cpu tensorflow-estimator tensorflow-gpu tensorflow-sse3
+conda install libtensorflow libtensorflow_cc libtensorflow_framework tensorflow tensorflow-avx2 tensorflow-base tensorflow-cpu tensorflow-gpu tensorflow-sse3
 ```
 
 or with `mamba`:
 
 ```
-mamba install libtensorflow libtensorflow_cc libtensorflow_framework tensorflow tensorflow-avx2 tensorflow-avx512 tensorflow-base tensorflow-cpu tensorflow-estimator tensorflow-gpu tensorflow-sse3
+mamba install libtensorflow libtensorflow_cc libtensorflow_framework tensorflow tensorflow-avx2 tensorflow-base tensorflow-cpu tensorflow-gpu tensorflow-sse3
 ```
 
 It is possible to list all of the versions of `libtensorflow` available on your platform with `conda`:
@@ -132,17 +136,17 @@ Terminology
                   produce the finished article (built conda distributions)
 
 
-Updating tensorflow-feedstock
-=============================
+Updating libtensorflow-feedstock
+================================
 
-If you would like to improve the tensorflow recipe or build a new
+If you would like to improve the libtensorflow recipe or build a new
 package version, please fork this repository and submit a PR. Upon submission,
 your changes will be run on the appropriate platforms to give the reviewer an
 opportunity to confirm that the changes result in a successful build. Once
 merged, the recipe will be re-built and uploaded automatically to the
 `conda-forge` channel, whereupon the built conda packages will be available for
 everybody to install and use from the `conda-forge` channel.
-Note that all branches in the conda-forge/tensorflow-feedstock are
+Note that all branches in the conda-forge/libtensorflow-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
 on branches in forks, and branches in the main repository should only be used to
 build distinct package versions.

@@ -1,0 +1,25 @@
+From d94885ce44349a5bfce0dc8b969dc3916390364f Mon Sep 17 00:00:00 2001
+From: Filippo Luca Ferretti <filippoluca.ferretti@outlook.com>
+Date: Fri, 27 Mar 2026 17:38:01 +0100
+Subject: [PATCH] Add missing #include <string> in
+ custom_call_status_internal.h
+
+---
+ third_party/xla/xla/service/custom_call_status_internal.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/third_party/xla/xla/service/custom_call_status_internal.h b/third_party/xla/xla/service/custom_call_status_internal.h
+index e2ccc511..f8f8d469 100644
+--- a/third_party/xla/xla/service/custom_call_status_internal.h
++++ b/third_party/xla/xla/service/custom_call_status_internal.h
+@@ -17,6 +17,7 @@ limitations under the License.
+ #define XLA_SERVICE_CUSTOM_CALL_STATUS_INTERNAL_H_
+ 
+ #include <optional>
++#include <string>
+ 
+ #include "absl/strings/string_view.h"
+ #include "xla/service/custom_call_status.h"
+-- 
+2.43.0
+
