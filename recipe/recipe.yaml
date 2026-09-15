@@ -387,10 +387,10 @@ outputs:
       run_exports: false
     build:
       script: build_pkg.sh
-      # tensorflow 2.18 doesn't support py313 until 2.20, see
-      # https://github.com/tensorflow/tensorflow/issues/78774
+      # tensorflow doesn't support py314 until 2.22, see
+      # https://github.com/tensorflow/tensorflow/issues/102890
       skip:
-        - match(python, "3.13.*")
+        - match(python, "3.14.*")
       string: ${{ build_str_prefix ~ "py" ~ (python | version_to_buildstring) ~ "h" ~ hash ~ "_" ~ build_number }}
       python:
         entry_points:
@@ -462,10 +462,10 @@ outputs:
     build:
       # Meta-package: no-op script to avoid falling back to build.sh
       script: "true"
-      # tensorflow 2.18 doesn't support py313 until 2.20, see
-      # https://github.com/tensorflow/tensorflow/issues/78774
+      # tensorflow doesn't support py314 until 2.22, see
+      # https://github.com/tensorflow/tensorflow/issues/102890
       skip:
-        - match(python, "3.13.*")
+        - match(python, "3.14.*")
       string: ${{ build_str_prefix ~ "py" ~ (python | version_to_buildstring) ~ "h" ~ hash ~ "_" ~ build_number }}
     requirements:
       host:
@@ -549,9 +549,9 @@ outputs:
       script: "true"
       skip:
         - (not x86_64) or (microarch_level | default("1") | int) != 1
-        # tensorflow 2.18 doesn't support py313 until 2.20, see
-        # https://github.com/tensorflow/tensorflow/issues/78774
-        - match(python, "3.13.*")
+        # tensorflow doesn't support py314 until 2.22, see
+        # https://github.com/tensorflow/tensorflow/issues/102890
+        - match(python, "3.14.*")
       string: ${{ build_str_prefix ~ "py" ~ (python | version_to_buildstring) ~ "h" ~ hash ~ "_" ~ build_number }}
     requirements:
       host:
@@ -570,9 +570,9 @@ outputs:
       script: "true"
       skip:
         - (not x86_64) or (microarch_level | default("1") | int) != 3
-        # tensorflow 2.18 doesn't support py313 until 2.20, see
-        # https://github.com/tensorflow/tensorflow/issues/78774
-        - match(python, "3.13.*")
+        # tensorflow doesn't support py314 until 2.22, see
+        # https://github.com/tensorflow/tensorflow/issues/102890
+        - match(python, "3.14.*")
       string: ${{ build_str_prefix ~ "py" ~ (python | version_to_buildstring) ~ "h" ~ hash ~ "_" ~ build_number }}
     requirements:
       host:
@@ -591,9 +591,9 @@ outputs:
       script: "true"
       skip:
         - (not x86_64) or (microarch_level | default("1") | int) != 4
-        # tensorflow 2.18 doesn't support py313 until 2.20, see
-        # https://github.com/tensorflow/tensorflow/issues/78774
-        - match(python, "3.13.*")
+        # tensorflow doesn't support py314 until 2.22, see
+        # https://github.com/tensorflow/tensorflow/issues/102890
+        - match(python, "3.14.*")
       string: ${{ build_str_prefix ~ "py" ~ (python | version_to_buildstring) ~ "h" ~ hash ~ "_" ~ build_number }}
     requirements:
       host:
